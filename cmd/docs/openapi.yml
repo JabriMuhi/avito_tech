@@ -1,0 +1,229 @@
+openapi: 3.0.0
+info:
+  title: Avito API
+  version: 1.0.0
+paths:
+  /api/ping:
+    get:
+      summary: Ping the server
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ok
+  /api/bids:
+    post:
+      summary: Create a new bid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bid'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bid'
+    get:
+      summary: Get bids by ID, tender ID, organization ID, or creator username
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: integer
+        - name: tenderID
+          in: query
+          schema:
+            type: integer
+        - name: organizationID
+          in: query
+          schema:
+            type: integer
+        - name: username
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bid'
+  /api/bids/{id}:
+    put:
+      summary: Update or rollback a bid by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: version
+          in: query
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bid'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bid'
+  /api/reviews:
+    post:
+      summary: Create a new review
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Review'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+    get:
+      summary: Get reviews by bid ID, author username, or organization ID
+      parameters:
+        - name: bidID
+          in: query
+          schema:
+            type: integer
+        - name: username
+          in: query
+          schema:
+            type: string
+        - name: organizationID
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Review'
+  /api/tenders:
+    post:
+      summary: Create a new tender
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tender'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tender'
+    get:
+      summary: Get tenders by ID, organization ID, or creator username
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: integer
+        - name: organizationID
+          in: query
+          schema:
+            type: integer
+        - name: username
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tender'
+  /api/tenders/{id}:
+    put:
+      summary: Update or rollback a tender by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: version
+          in: query
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tender'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tender'
+components:
+  schemas:
+    Bid:
+      type: object
+      properties:
+        id:
+          type: integer
+        tenderID:
+          type: integer
+        organizationID:
+          type: integer
+        creatorUsername:
+          type: string
+        version:
+          type: integer
+    Review:
+      type: object
+      properties:
+        id:
+          type: integer
+        bidID:
+          type: integer
+        authorUsername:
+          type: string
+        organizationID:
+          type: integer
+    Tender:
+      type: object
+      properties:
+        id:
+          type: integer
+        organizationID:
+          type: integer
+        creatorUsername:
+          type: string
+        version:
+          type: integer
